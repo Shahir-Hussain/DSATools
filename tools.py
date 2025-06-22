@@ -232,7 +232,7 @@ def gcd(a: int, b: int) -> int:
     return a
 
 
-def SieveOfEratosthenes(n: int) -> list[bool]:
+def sieveOfEratosthenes(n: int) -> list[bool]:
     sieve = [True] * (n + 1)
     sieve[0] = sieve[1] = False
     
