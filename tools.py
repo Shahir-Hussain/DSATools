@@ -1,3 +1,11 @@
+from typing import List, Tuple, Dict, Set, Any, Optional, Union
+from itertools import permutations, combinations, product
+from collections import defaultdict, deque, Counter
+from heapq import heapify, heappop, heappush, heappushpop
+from bisect import bisect, bisect_left, bisect_right
+import sys
+
+
 mod = int(1e9) + 7
 
 class BinaryLifting:
@@ -84,14 +92,14 @@ class DisjointSet:
         self.parent: list[int] = [i for i in range(n+1)]
         self.size: list[int] = [1 for _ in range(n+1)]
     
-    def ultimateParent(self, node: int) -> int:
+    def ultParent(self, node: int) -> int:
         if self.parent[node] != node:
-            self.parent[node] = self.ultimateParent(self.parent[node])
+            self.parent[node] = self.ultParent(self.parent[node])
         return self.parent[node]
     
-    def unionBySize(self, node1: int, node2: int) -> None:
-        n1p = self.ultimateParent(node1)
-        n2p = self.ultimateParent(node2)
+    def union(self, node1: int, node2: int) -> None:
+        n1p = self.ultParent(node1)
+        n2p = self.ultParent(node2)
         if n1p == n2p: return
         if self.size[n2p] > self.size[n1p]:
             self.parent[n1p] = n2p
