@@ -3,6 +3,8 @@ from itertools import permutations, combinations, product
 from collections import defaultdict, deque, Counter
 from heapq import heapify, heappop, heappush, heappushpop
 from bisect import bisect, bisect_left, bisect_right
+from math import log2, log10, log, ceil, floor
+from functools import lru_cache, reduce
 import sys
 
 
