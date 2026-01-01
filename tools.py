@@ -11,16 +11,16 @@ mod = int(1e9) + 7
 
 class BinaryLifting:
     def __init__(self, n: int, edges: list[list[int]], root: int) -> None:
-        self.n = n
-        self.maxBit = n.bit_length()
-        self.adj = [[] for _ in range(n+1)]
-        self.depth = [0] * (n+1)
-        self.table = [[0]*(n+1) for _ in range(self.maxBit)]
+        self.n: int = n
+        self.maxBit: int = n.bit_length()
+        self.depth: list[int] = [0] * (n+1)
+        self.adj: list[list[int]] = [[] for _ in range(n+1)]
+        self.table: list[list[int]] = [[0]*(n+1) for _ in range(self.maxBit)]
 
         for ui, vi in edges:
             self.adj[ui].append(vi)
             self.adj[vi].append(ui)
-        
+
         self.__dfs(root, 0)
         self.__build()
         return 
@@ -31,7 +31,7 @@ class BinaryLifting:
         for nei in self.adj[node]:
             if nei != parent:
                 self.depth[nei] = self.depth[node] + 1
-                self.dfs(nei, node)
+                self.__dfs(nei, node)
 
         return 
 
@@ -102,8 +102,9 @@ class DisjointSet:
         return self.parent[node]
     
     def union(self, node1: int, node2: int) -> None:
-        n1p = self.ultParent(node1)
-        n2p = self.ultParent(node2)
+        n1p: int = self.ultParent(node1)
+        n2p: int = self.ultParent(node2)
+        
         if n1p == n2p: return
         if self.size[n2p] > self.size[n1p]:
             self.parent[n1p] = n2p
@@ -120,20 +121,24 @@ class Matrix:
         return 
 
     def multiplication(self, a: list[list[int]], b: list[list[int]]) -> list[list[int]]:
-        r1, c1, r2, c2 = len(a), len(a[0]), len(b), len(b[0])
+        r1: int = len(a)
+        r2: int = len(b)
+        c1: int = len(a[0])
+        c2: int = len(b[0])
+
         if c1 != r2: raise Exception("Matrix Multiplication Not Possible")
 
         res = [[0] * c2 for _ in range(r1)]
         for i in range(r1):
             for j in range(c2):
                 for k in range(c1):
-                    res[i][j] = (res[i][j] + (a[i][k] * b[k][j]) % mod) % self.mod
+                    res[i][j] = (res[i][j] + (a[i][k] * b[k][j]) % self.mod) % self.mod
 
         return res
 
     def exponentiation(self, m: list[list[int]], t: int) -> list[list[int]]:
-        s = len(m)
-        res = [[int(i==j) for j in range(s)] for i in range(s)]
+        s: int = len(m)
+        res: list[list[int]] = [[int(i==j) for j in range(s)] for i in range(s)]
 
         while t:
             if t&1:
@@ -156,30 +161,35 @@ class Trie:
         return 
 
     def insert(self, word: str) -> None:
-        curr = self.root
+        curr: TrieNode = self.root
+
         for char in word:
             if char not in curr.children:
                 curr.children[char] = TrieNode()
             curr = curr.children[char]
+
         curr.end = True
         return 
 
     def search(self, word: str) -> bool:
-        curr = self.root
+        curr: TrieNode = self.root
+
         for char in word:
             if char not in curr.children:
                 return False
             curr = curr.children[char]
+
         return curr.end
 
     def startsWith(self, prefix: str) -> list[str]:
-        curr = self.root
+        curr: TrieNode = self.root
+
         for char in prefix:
             if char not in curr.children:
                 return False
             curr = curr.children[char]
 
-        res = []
+        res: list[str] = []
         def dfs(curr: TrieNode, word: str) -> None:
             if curr.end:
                 res.append(word)
@@ -206,18 +216,17 @@ def subsets(nums: list[int]) -> list[list[int]]:
 
 
 def topoSort(n: int, edges: list[list[int]]) -> tuple[list[int], list[list[int]]]:
-    adj = [[] for _ in range(n)]
-    indegree = [0] * n
-    res = []
+    res: list[int] = []
+    indegree: list[int] = [0] * n
+    adj: list[list[int]] = [[] for _ in range(n)]
 
     for ui, vi in edges:
         adj[ui].append(vi)
         indegree[vi] += 1
 
-    dq = [i for i, v in enumerate(indegree) if not v]
-
+    dq: list[int] = [i for i, v in enumerate(indegree) if not v]
     while dq:
-        newDQ = []
+        newDQ: list[int] = []
         for node in dq:
             res.append(node)
             for nei in adj[node]:
@@ -233,7 +242,7 @@ def topoSort(n: int, edges: list[list[int]]) -> tuple[list[int], list[list[int]]
 
 
 def pascalTriangle(n: int) -> list[list[int]]:
-    comb = [[0]*n for i in range(n)]
+    comb: list[list[int]] = [[0]*n for _ in range(n)]
 
     for i in range(n):
         comb[i][0] = 1
@@ -250,9 +259,9 @@ def gcd(a: int, b: int) -> int:
 
 
 def sieveOfEratosthenes(n: int) -> list[bool]:
-    sieve = [True] * (n + 1)
+    sieve: list[bool] = [True] * (n + 1)
     sieve[0] = sieve[1] = False
-    
+
     for i in range(2, int(pow(n, 0.5)) + 1):
         if sieve[i]:
             for j in range(i*i, n + 1, i):
@@ -261,8 +270,8 @@ def sieveOfEratosthenes(n: int) -> list[bool]:
     return sieve
 
 
-def primeFactorization(n: int) -> list[bool]:
-    sieve = [[] for i in range(n+1)] 
+def primeFactorization(n: int) -> list[list[int]]:
+    sieve: list[list[int]] = [[] for _ in range(n+1)] 
 
     for i in range(2, n + 1):
         if not sieve[i]:
