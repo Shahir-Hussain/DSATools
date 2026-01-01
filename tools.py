@@ -5,13 +5,12 @@ from heapq import heapify, heappop, heappush, heappushpop
 from bisect import bisect, bisect_left, bisect_right
 from math import log2, log10, log, ceil, floor
 from functools import lru_cache, reduce
-import sys
-
+from sys import stdin, stdout, setrecursionlimit
 
 mod = int(1e9) + 7
 
 class BinaryLifting:
-    def __init__(self, n: int, edges: list[list[int]], root: int):
+    def __init__(self, n: int, edges: list[list[int]], root: int) -> None:
         self.n = n
         self.maxBit = n.bit_length()
         self.adj = [[] for _ in range(n+1)]
@@ -22,10 +21,11 @@ class BinaryLifting:
             self.adj[ui].append(vi)
             self.adj[vi].append(ui)
         
-        self.dfs(root, 0)
-        self.build()
+        self.__dfs(root, 0)
+        self.__build()
+        return 
     
-    def dfs(self, node: int, parent: int) -> None:
+    def __dfs(self, node: int, parent: int) -> None:
         self.table[0][node] = parent
 
         for nei in self.adj[node]:
@@ -35,7 +35,7 @@ class BinaryLifting:
 
         return 
 
-    def build(self) -> None:
+    def __build(self) -> None:
         for i in range(1, self.maxBit):
             for j in range(self.n + 1):
                 self.table[i][j] = self.table[i-1][self.table[i-1][j]]
@@ -81,11 +81,12 @@ class Combinatorics:
         self.fermet = [1] * (n + 1)
         for i in range(1, n+1):
             self.fermet[i] = pow(self.fact[i], self.mod-2, self.mod)
+        return 
     
-    def ncr(self, n: int, r: int):
+    def ncr(self, n: int, r: int) -> int:
         return self.fact[n] * self.fermet[r] * self.fermet[n-r] % self.mod
 
-    def npr(self, n: int, r: int):
+    def npr(self, n: int, r: int) -> int:
         return self.fact[n] * self.fermet[n-r] % self.mod
 
 
@@ -93,6 +94,7 @@ class DisjointSet:
     def __init__(self, n: int) -> None:
         self.parent: list[int] = [i for i in range(n+1)]
         self.size: list[int] = [1 for _ in range(n+1)]
+        return 
     
     def ultParent(self, node: int) -> int:
         if self.parent[node] != node:
@@ -109,14 +111,16 @@ class DisjointSet:
         else:
             self.parent[n2p] = n1p
             self.size[n1p] += self.size[n2p]
+        return 
 
 
 class Matrix:
     def __init__(self, mod: int) -> None:
         self.mod: int = mod
+        return 
 
     def multiplication(self, a: list[list[int]], b: list[list[int]]) -> list[list[int]]:
-        r1, c1, r2, c2 = len(a), len(a[0]), len(b), len(b[0]),
+        r1, c1, r2, c2 = len(a), len(a[0]), len(b), len(b[0])
         if c1 != r2: raise Exception("Matrix Multiplication Not Possible")
 
         res = [[0] * c2 for _ in range(r1)]
@@ -144,10 +148,12 @@ class TrieNode:
     def __init__(self) -> None:
         self.children: dict[str, TrieNode] = {}
         self.end: bool = False
+        return 
 
 class Trie:
     def __init__(self) -> None:
         self.root: TrieNode = TrieNode()
+        return 
 
     def insert(self, word: str) -> None:
         curr = self.root
@@ -156,6 +162,7 @@ class Trie:
                 curr.children[char] = TrieNode()
             curr = curr.children[char]
         curr.end = True
+        return 
 
     def search(self, word: str) -> bool:
         curr = self.root
@@ -174,12 +181,12 @@ class Trie:
 
         res = []
         def dfs(curr: TrieNode, word: str) -> None:
-          if curr.end:
-            res.append(word)
+            if curr.end:
+                res.append(word)
 
-          for w in curr.children:
-            dfs(curr.children[w], word + w)
-          return 
+            for w in curr.children:
+                dfs(curr.children[w], word + w)
+            return 
         
         dfs(curr, prefix)
         return res
@@ -222,7 +229,7 @@ def topoSort(n: int, edges: list[list[int]]) -> tuple[list[int], list[list[int]]
     if len(res) != n:
         res = []
 
-    return res[::-1], adj
+    return (res[::-1], adj)
 
 
 def pascalTriangle(n: int) -> list[list[int]]:
@@ -252,4 +259,16 @@ def sieveOfEratosthenes(n: int) -> list[bool]:
                 sieve[j] = False
     
     return sieve
+
+
+def primeFactorization(n: int) -> list[bool]:
+    sieve = [[] for i in range(n+1)] 
+
+    for i in range(2, n + 1):
+        if not sieve[i]:
+            for j in range(i + i, n + 1, i):
+                sieve[j].append(i)
+        sieve[i] = [i] if not sieve[i] else sieve[i]
+
+    return sieve 
 
